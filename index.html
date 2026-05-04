@@ -6,6 +6,7 @@
     <title>TechAcademy | Learn Cyber & Dev</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -252,7 +253,7 @@
             <li><a href="#">Learning Path</a></li>
             <li><a href="#">Success Stories</a></li>
         </ul>
-        <button class="btn-view" style="background: var(--primary); color: white;">Join Pro</button>
+        <button class="btn-view" style="background: var(--primary); color: white;" onclick="payNow(4999, 'Pro Membership')">Join Pro</button>
     </nav>
 
     <div id="main-page">
@@ -267,9 +268,9 @@
                     <div class="course-title">
                         <span class="course-badge">Security & Defense</span>
                         <h2>Ethical Hacking & Cyber Defense</h2>
-                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Comprehensive training on penetration testing and network safety.</p>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Price: ₹1,499</p>
                     </div>
-                    <button class="btn-view" onclick="openCourse('cyber')">Enroll in Course</button>
+                    <button class="btn-view" onclick="payNow(1499, 'Ethical Hacking Course')">Buy Now</button>
                 </div>
             </div>
 
@@ -278,9 +279,9 @@
                     <div class="course-title">
                         <span class="course-badge">Development</span>
                         <h2>Full-Stack Web Engineering</h2>
-                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Master modern frontend frameworks and robust backend systems.</p>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">Price: ₹1,999</p>
                     </div>
-                    <button class="btn-view" style="color: #059669;" onclick="openCourse('web')">Enroll in Course</button>
+                    <button class="btn-view" style="color: #059669;" onclick="payNow(1999, 'Full-Stack Web Engineering')">Buy Now</button>
                 </div>
             </div>
         </div>
@@ -313,58 +314,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="lesson">
-                    <div class="lesson-header" onclick="this.parentElement.classList.toggle('active')">
-                        <div class="lesson-number">02</div>
-                        <div class="lesson-info">
-                            <h4>Linux for Pentesting</h4>
-                            <div class="lesson-content">
-                                <div class="video-container">
-                                    <iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                </div>
-                                <p>The terminal is your best friend. In this lesson, we cover essential Linux commands.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="template-web">
-        <div class="course-card">
-            <div class="course-header" style="background: linear-gradient(to right, #059669, #10b981);">
-                <h2>Full-Stack Web Engineering: Curriculum</h2>
-            </div>
-            <div class="curriculum">
-                <div class="lesson">
-                    <div class="lesson-header" onclick="this.parentElement.classList.toggle('active')">
-                        <div class="lesson-number">01</div>
-                        <div class="lesson-info">
-                            <h4>Modern Frontend Architecture</h4>
-                            <div class="lesson-content">
-                                <div class="video-container">
-                                    <iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                </div>
-                                <p>Moving beyond basic HTML. We explore React component structures and State Management.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="lesson">
-                    <div class="lesson-header" onclick="this.parentElement.classList.toggle('active')">
-                        <div class="lesson-number">02</div>
-                        <div class="lesson-info">
-                            <h4>Backend Systems & APIs</h4>
-                            <div class="lesson-content">
-                                <div class="video-container">
-                                    <iframe src="https://www.youtube-nocookie.com/embed/ehCvbJ14wgs?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                </div>
-                                <p>Build robust servers using Node.js and Express. Learn how to design RESTful APIs.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </template>
@@ -374,6 +323,35 @@
     </footer>
 
     <script>
+        // PAYMENT SYSTEM FUNCTION
+        function payNow(amountInRupees, itemName) {
+            const options = {
+                "key": "YOUR_RAZORPAY_KEY_ID", // Enter Key ID from Razorpay Dashboard
+                "amount": amountInRupees * 100, // Razorpay works in paise (₹1 = 100 paise)
+                "currency": "INR",
+                "name": "TechAcademy",
+                "description": "Payment for " + itemName,
+                "image": "https://cdn-icons-png.flaticon.com/512/2092/2092663.png",
+                "handler": function (response){
+                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                    // Here you would typically open the course content
+                    if(itemName.includes('Hacking')) openCourse('cyber');
+                },
+                "prefill": {
+                    "name": "Biraj Biswas",
+                    "email": "student@example.com"
+                },
+                "theme": {
+                    "color": "#4f46e5"
+                }
+            };
+            const rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                    alert("Payment Failed: " + response.error.description);
+            });
+            rzp1.open();
+        }
+
         function openCourse(courseId) {
             const mainPage = document.getElementById('main-page');
             const detailPage = document.getElementById('course-detail-page');
